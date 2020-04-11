@@ -1,10 +1,18 @@
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 
-function ytDownload(data){
+function ytDownload(e,data){
+    let stream = fs.createWriteStream(data.filepath);
     ytdl(data.url,{quality:data.quality,filter:'audioandvideo'})
-    .pipe(fs.createWriteStream(data.filepath));
-
+    .pipe(stream);
+    //someone FIX ME- finish emits twice on eevent reply to ipcRenderer
+    stream.on('finish',()=>{
+     
+        e.reply("download-confirmation","finished");
+       
+        stream.destroy();
+    })
+    
 }
 function ytAudioDownload(data){
 

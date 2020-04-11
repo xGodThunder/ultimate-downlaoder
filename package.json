@@ -30,6 +30,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
     "ytdl-core": "^2.0.1"
   }
 }

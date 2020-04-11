@@ -1,7 +1,9 @@
 import '../assets/css/App.css';
 import logo from '../assets/images/logo.png';
-
+import loading_spinner from '../assets/images/loading.gif';
+import success_spinner from '../assets/images/success.gif';
 import React, { useState } from 'react';
+let classNames = require('classnames');
 let ipcRenderer = require('electron').ipcRenderer;
 //renderer.js - renderer process example
 const {remote} = require('electron'),
@@ -23,11 +25,12 @@ let options = {
    }
 export default ()=>{
     const [info, setInfo] = useState(null);
+    const [loading,setLoading]=useState(false);
+    const [success,setSuccess]=useState(false);
 
     function checkUrl(e){
         e.preventDefault();
         const url =e.target.elements[0].value;
-        
         ipcRenderer.sendSync("url-received",{url:url});
     }
 
@@ -47,16 +50,32 @@ export default ()=>{
         let filename = dialog.showSaveDialog(WIN, options);
        filename.then(data=>{
         ipcRenderer.sendSync("start-download",{quality:quality,filepath:data.filePath,url:info.video_url});
+        if(data.filePath){
+            setLoading(true);
+        }
+       }).catch(err=>{
+           console.log(err);
        })
       
-       
+ 
     }
 
 
+
      ipcRenderer.on('set-url-info', (event, arg) => {
-         console.log(arg);
+        
        setInfo(arg);
-     })
+     });
+  
+     ipcRenderer.on('download-confirmation', (event, arg) => {
+         setLoading(false);
+         setSuccess(true);
+         setTimeout(()=>{
+             setSuccess(false);
+         },5000);
+        
+     
+    });
 
     
 
@@ -64,7 +83,7 @@ export default ()=>{
         <div className="main">
             <h1><img src={logo} alt="Logo" style={{width:'50px'}}/> Ultimate  Video Downloader</h1>
               <form className="form" onSubmit={checkUrl}>
-                    <div><span>Enter URL: </span><input type="text"></input>  <button type="submit">Submit</button></div>
+                    <div><span>Enter URL: </span><input  placeholder="Enter Video URL" type="text"></input>  <button type="submit">Submit</button></div>
                   
               </form>
 
@@ -86,6 +105,15 @@ export default ()=>{
                       </form>
                   </div>
               </div>}
+              <div className={classNames({
+                  "info-panel":true,
+                  "info-panel-active": loading || success ? true : false
+
+              })}>   
+                    {loading && <div><img src={loading_spinner}/><span>Downloading...</span></div>}
+                    {success && <div><img src={success_spinner}/><span>Download Successfull</span></div>}
+              </div>
+              
         </div>
     );
 

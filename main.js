@@ -81,12 +81,14 @@ ipcMain.on("url-received",async (event,args)=>{
 
 //event for start downloading
 ipcMain.on("start-download",(event,args)=>{
- 
-if(args.quality==="audioonly"){
-  ytAudioDownload(args);
-}else{
-  ytDownload(args);
-}
+  if(args.filepath){
+    event.reply("download-start-confirmation",true);
+    if(args.quality==="audioonly"){
+      ytAudioDownload(args);
+    }else{
+      ytDownload(event,args);
+    }
+  }
 event.returnValue="";
 
 })

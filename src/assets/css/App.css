@@ -63,3 +63,17 @@ width:400px;
   
   text-align: center;
 }
+
+
+
+
+/* info panel */
+.info-panel{
+visibility: hidden;
+}
+.info-panel img{
+  width:32px; 
+}
+.info-panel-active{
+  visibility: visible;;
+}
