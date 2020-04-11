@@ -31,14 +31,20 @@ export default ()=>{
 
     function checkUrl(e){
         e.preventDefault();
-        debugger;
+        if(loading){
+            notification({icon:'error',title:'Download is under process',text:'please wait a while before starting another download'});
+            return
+        }
         const url =e.target.elements[0].value;
         ipcRenderer.sendSync("url-received",{url:url});
     }
 
     function startDownload(e){
         e.preventDefault();
-        debugger;
+        if(loading){
+           notification({icon:'error',title:'Download is under process',text:'please wait a while before starting another download'});
+           return;
+        }
         const quality =e.target.children[0].children[1].value;
         if(quality==='audioonly'){
             options.filters=[
