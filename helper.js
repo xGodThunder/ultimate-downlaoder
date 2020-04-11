@@ -14,10 +14,18 @@ function ytDownload(e,data){
     })
     
 }
-function ytAudioDownload(data){
-
+function ytAudioDownload(e,data){
+     console.log(data);
+    let stream = fs.createWriteStream(data.filepath);
     ytdl(data.url,{filter:'audioonly'})
-    .pipe(fs.createWriteStream(data.filepath));
+    .pipe(stream);
+    //someone FIX ME- finish emits twice on eevent reply to ipcRenderer
+    stream.on('finish',()=>{
+     
+        e.reply("download-confirmation","finished");
+       
+        stream.destroy();
+    })
 
 }
 

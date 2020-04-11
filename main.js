@@ -1,11 +1,12 @@
 
 
 // Import parts of electron to use
-const { app, BrowserWindow,ipcMain } = require('electron');
+const { app, BrowserWindow,ipcMain,Menu } = require('electron');
 const path = require('path')
 const url = require('url')
 const {ytDownload,ytGetInfo,ytAudioDownload} = require('./helper');
-
+//force disable menu bar
+//Menu.setApplicationMenu(true);
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -25,9 +26,12 @@ function createWindow() {
     width: 1024, height: 768, show: false,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    title:'ultimate downloader by xGodThunder',
+    icon:__dirname+'//src//assets//images//logo.png'
   });
-  mainWindow.setMenu(null);
+
+
   // and load the index.html of the app.
   let indexPath;
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
@@ -62,12 +66,16 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+  mainWindow.on('page-title-updated', function(e) {
+    e.preventDefault()
+  });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
 
 // getting url from form and sanity checking
 ipcMain.on("url-received",async (event,args)=>{
@@ -84,7 +92,7 @@ ipcMain.on("start-download",(event,args)=>{
   if(args.filepath){
     event.reply("download-start-confirmation",true);
     if(args.quality==="audioonly"){
-      ytAudioDownload(args);
+      ytAudioDownload(event,args);
     }else{
       ytDownload(event,args);
     }
@@ -110,3 +118,5 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+

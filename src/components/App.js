@@ -1,3 +1,4 @@
+import '../assets/css/ui.css';
 import '../assets/css/App.css';
 import React, { Component } from 'react';
 import Sidebar from './sidebar';
