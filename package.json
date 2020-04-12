@@ -1,5 +1,5 @@
 {
-  "name": "ultimate-downlaoder",
+  "name": "ultimate-downloader",
   "description": "Minimal and modern youtube facebook downloader desktop app",
   "author": "Ishu Sharma",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "dev": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js",
     "build": "webpack --config webpack.build.config.js",
     "package": "webpack --config webpack.build.config.js",
-    "postpackage": "electron-packager ./ --out=./builds"
+    "postpackage": "electron-packager ./ --out=./builds --icon='./src/assets/images/logo.ico' "
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "electron-debug": "^3.0.1",
     "sweetalert2": "^9.10.10",
     "ytdl-core": "^2.0.1"
   }

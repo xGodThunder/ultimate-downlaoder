@@ -14,9 +14,9 @@ let mainWindow;
 
 // Keep a reference for dev mode
 let dev = false;
-if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
-  dev = true;
-}
+// if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
+//   dev = true;
+// }
 
 
 
@@ -28,12 +28,12 @@ function createWindow() {
       nodeIntegration: true
     },
     title:'ultimate downloader by xGodThunder',
-    icon:__dirname+'//src//assets//images//logo.png'
+    icon:path.join('src','assets','images','logo.ico')
   });
 
 
   // and load the index.html of the app.
-  let indexPath;
+  let indexPath="";
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
     indexPath = url.format({
       protocol: 'http:',
@@ -41,12 +41,14 @@ function createWindow() {
       pathname: 'index.html',
       slashes: true
     });
+
   } else {
     indexPath = url.format({
       protocol: 'file:',
       pathname: path.join(__dirname, 'dist', 'index.html'),
       slashes: true
     });
+    
   }
   mainWindow.loadURL(indexPath);
 
