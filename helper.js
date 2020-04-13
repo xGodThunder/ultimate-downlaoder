@@ -29,6 +29,10 @@ function ytAudioDownload(e,data){
 
 }
 
+function ytValidateURL(url){
+  return  ytdl.validateURL(url);
+}
+
 async function ytGetInfo(url){
   
    let promise =  ytdl.getBasicInfo(url,[]);
@@ -38,6 +42,7 @@ async function ytGetInfo(url){
 module.exports={
     ytDownload:ytDownload,
     ytGetInfo:ytGetInfo,
-    ytAudioDownload:ytAudioDownload
+    ytAudioDownload:ytAudioDownload,
+    ytValidateURL:ytValidateURL
 
 }

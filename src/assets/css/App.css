@@ -83,3 +83,20 @@ visibility: hidden;
 .info-panel-active{
   visibility: visible;;
 }
+
+
+/* Author */
+.author{
+  position: absolute;
+  bottom: 10px;
+  right: 100px;
+}
+.author li{
+  list-style-type: none;
+  display: inline;
+  margin: 5px;
+}
+.author-social li img{
+width: 32px;
+cursor: pointer;
+}

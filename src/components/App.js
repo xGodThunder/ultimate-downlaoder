@@ -1,8 +1,8 @@
 import '../assets/css/ui.css';
 import '../assets/css/App.css';
 import React, { Component } from 'react';
-import Sidebar from './sidebar';
-import Main from './main';
+import Sidebar from './Sidebar';
+import Main from './Main';
 let ipcRenderer = require('electron').ipcRenderer;
 
 

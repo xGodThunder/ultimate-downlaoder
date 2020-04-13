@@ -1,9 +1,9 @@
 import '../assets/css/App.css';
 import logo from '../assets/images/logo.png';
 import loading_spinner from '../assets/images/loading.gif';
-import success_spinner from '../assets/images/success.gif';
 import React, { useState } from 'react';
 import notification from './notification';
+import Author from './Author';
 let classNames = require('classnames');
 let ipcRenderer = require('electron').ipcRenderer;
 
@@ -71,8 +71,7 @@ export default ()=>{
 
 
 
-     ipcRenderer.on('set-url-info', (event, arg) => {
-        
+     ipcRenderer.on('set-url-info', (event, arg) => {  
        setInfo(arg);
      });
   
@@ -81,9 +80,12 @@ export default ()=>{
       
          notification({icon:'success',title:'Download Successfull !',text:'That is Awesome Champion'})
         
-     
     });
-
+    ipcRenderer.on('call-notification', (event, arg) => {
+        console.log('noti')
+        notification({icon:'error',title:arg,text:'Please check url, dont forget to metion http/https before the url'})
+       
+   });
     
 
     return (
@@ -93,7 +95,7 @@ export default ()=>{
                     <div className="input-group">
                         <span className="input-group-addon">Enter URL:</span>
                         <input className="form-input"  placeholder="Enter Video URL" type="text"></input> 
-                         <button className={classNames({'btn':true,'btn-primary':true,'input-group-btn':true})} type="submit">Submit</button>
+                         <button className={classNames({'btn':true,'btn-primary':true,'input-group-btn':true})} type="submit">get video</button>
                          </div>
                   
               </form>
@@ -126,7 +128,7 @@ export default ()=>{
               })}>   
                     {loading && <h1><img src={loading_spinner}/><span style={{'verticalAlign':'top'}}>Downloading...</span></h1>}
                   </div>
-              
+             <Author/>
         </div>
     );
 

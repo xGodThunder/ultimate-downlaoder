@@ -4,19 +4,21 @@
 const { app, BrowserWindow,ipcMain,Menu } = require('electron');
 const path = require('path')
 const url = require('url')
-const {ytDownload,ytGetInfo,ytAudioDownload} = require('./helper');
+const {ytDownload,ytGetInfo,ytAudioDownload,ytValidateURL} = require('./helper');
 //force disable menu bar
 //Menu.setApplicationMenu(true);
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
+//hide default menu bar
+Menu.setApplicationMenu(false);
 
 // Keep a reference for dev mode
 let dev = false;
-// if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
-//   dev = true;
-// }
+if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
+  dev = true;
+}
 
 
 
@@ -82,10 +84,17 @@ app.on('ready', createWindow);
 // getting url from form and sanity checking
 ipcMain.on("url-received",async (event,args)=>{
   event.returnValue=true;
- const info= await ytGetInfo(args.url);
-
- //sending info to event
+ 
+  const is_url_valid = ytValidateURL(args.url);
+  if(!is_url_valid){
+    console.log(is_url_valid);
+    event.reply('call-notification',"URL not valid");
+     return 0;
+  }
+  const info= await ytGetInfo(args.url);
+  //sending info to event
   event.reply("set-url-info",info);
+  
 
 });
 
