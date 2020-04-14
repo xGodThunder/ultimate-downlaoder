@@ -1,10 +1,10 @@
 
 
 // Import parts of electron to use
-const { app, BrowserWindow,ipcMain,Menu } = require('electron');
-const path = require('path')
-const url = require('url')
-const {ytDownload,ytGetInfo,ytAudioDownload,ytValidateURL} = require('./helper');
+const { app, BrowserWindow,ipcMain,Menu } = require("electron");
+const path = require("path");
+const url = require("url");
+const {ytDownload,ytGetInfo,ytAudioDownload,ytValidateURL} = require("./helper");
 //force disable menu bar
 //Menu.setApplicationMenu(true);
 // Keep a global reference of the window object, if you don't, the window will
@@ -16,118 +16,115 @@ Menu.setApplicationMenu(false);
 
 // Keep a reference for dev mode
 let dev = false;
-if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
-  dev = true;
-}
+// if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
+//   dev = true;
+// }
 
 
 
 function createWindow() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 1024, height: 768, show: false,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    title:'ultimate downloader by xGodThunder',
-    icon:path.join('src','assets','images','logo.ico')
-  });
+	// Create the browser window.
+	mainWindow = new BrowserWindow({
+		width: 1024, height: 768, show: false,
+		webPreferences: {
+			nodeIntegration: true
+		},
+		title:"ultimate downloader by xGodThunder",
+		icon:path.join("src","assets","images","logo.ico")
+	});
 
 
-  // and load the index.html of the app.
-  let indexPath="";
-  if (dev && process.argv.indexOf('--noDevServer') === -1) {
-    indexPath = url.format({
-      protocol: 'http:',
-      host: 'localhost:8080',
-      pathname: 'index.html',
-      slashes: true
-    });
+	// and load the index.html of the app.
+	let indexPath="";
+	if (dev && process.argv.indexOf("--noDevServer") === -1) {
+		indexPath = url.format({
+			protocol: "http:",
+			host: "localhost:8080",
+			pathname: "index.html",
+			slashes: true
+		});
 
-  } else {
-    indexPath = url.format({
-      protocol: 'file:',
-      pathname: path.join(__dirname, 'dist', 'index.html'),
-      slashes: true
-    });
-    
-  }
-  mainWindow.loadURL(indexPath);
+	} else {
+		indexPath = url.format({
+			protocol: "file:",
+			pathname: path.join(__dirname, "dist", "index.html"),
+			slashes: true
+		});
 
-  // Don't show until we are ready and loaded
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-    // Open the DevTools automatically if developing
-    if (dev) {
-      mainWindow.webContents.openDevTools();
-    }
-  });
+	}
+	mainWindow.loadURL(indexPath);
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
-  mainWindow.on('page-title-updated', function(e) {
-    e.preventDefault()
-  });
+	// Don't show until we are ready and loaded
+	mainWindow.once("ready-to-show", () => {
+		mainWindow.show();
+		// Open the DevTools automatically if developing
+		if (dev) {
+			mainWindow.webContents.openDevTools();
+		}
+	});
+
+	// Emitted when the window is closed.
+	mainWindow.on("closed", function () {
+		// Dereference the window object, usually you would store windows
+		// in an array if your app supports multi windows, this is the time
+		// when you should delete the corresponding element.
+		mainWindow = null;
+	});
+	mainWindow.on("page-title-updated", function(e) {
+		e.preventDefault();
+	});
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
 
 // getting url from form and sanity checking
 ipcMain.on("url-received",async (event,args)=>{
-  event.returnValue=true;
- 
-  const is_url_valid = ytValidateURL(args.url);
-  if(!is_url_valid){
-    console.log(is_url_valid);
-    event.reply('call-notification',"URL not valid");
-     return 0;
-  }
-  const info= await ytGetInfo(args.url);
-  //sending info to event
-  event.reply("set-url-info",info);
-  
-
+	event.returnValue=true;
+	const is_url_valid = ytValidateURL(args.url);
+	if(!is_url_valid){
+		console.log(is_url_valid);
+		event.reply("call-notification","URL not valid");
+		return 0;
+	}
+	const info= await ytGetInfo(args.url);
+	//sending info to event
+	event.reply("set-url-info",info);
 });
 
 //event for start downloading
 ipcMain.on("start-download",(event,args)=>{
-  if(args.filepath){
-    event.reply("download-start-confirmation",true);
-    if(args.quality==="audioonly"){
-      ytAudioDownload(event,args);
-    }else{
-      ytDownload(event,args);
-    }
-  }
-event.returnValue="";
+	if(args.filepath){
+		event.reply("download-start-confirmation",true);
+		if(args.quality==="audioonly"){
+			ytAudioDownload(event,args);
+		}else{
+			ytDownload(event,args);
+		}
+	}
+	event.returnValue="";
 
-})
+});
 
 // Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+app.on("window-all-closed", () => {
+	// On macOS it is common for applications and their menu bar
+	// to stay active until the user quits explicitly with Cmd + Q
+	if (process.platform !== "darwin") {
+		app.quit();
+	}
 });
 
 
-app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow();
-  }
+app.on("activate", () => {
+	// On macOS it's common to re-create a window in the app when the
+	// dock icon is clicked and there are no other windows open.
+	if (mainWindow === null) {
+		createWindow();
+	}
 });
 
 

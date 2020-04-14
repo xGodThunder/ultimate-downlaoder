@@ -1,48 +1,41 @@
-const fs = require('fs');
-const ytdl = require('ytdl-core');
+const fs = require("fs");
+const ytdl = require("ytdl-core");
 
 function ytDownload(e,data){
-    let stream = fs.createWriteStream(data.filepath);
-    ytdl(data.url,{quality:data.quality,filter:'audioandvideo'})
-    .pipe(stream);
-    //someone FIX ME- finish emits twice on eevent reply to ipcRenderer
-    stream.on('finish',()=>{
-     
-        e.reply("download-confirmation","finished");
-       
-        stream.destroy();
-    })
-    
+	let stream = fs.createWriteStream(data.filepath);
+	ytdl(data.url,{quality:data.quality,filter:"audioandvideo"})
+		.pipe(stream);
+	//someone FIX ME- finish emits twice on eevent reply to ipcRenderer
+	stream.on("finish",()=>{
+		e.reply("download-confirmation","finished");
+		stream.destroy();
+	});
 }
 function ytAudioDownload(e,data){
-     console.log(data);
-    let stream = fs.createWriteStream(data.filepath);
-    ytdl(data.url,{filter:'audioonly'})
-    .pipe(stream);
-    //someone FIX ME- finish emits twice on eevent reply to ipcRenderer
-    stream.on('finish',()=>{
-     
-        e.reply("download-confirmation","finished");
-       
-        stream.destroy();
-    })
-
+	let stream = fs.createWriteStream(data.filepath);
+	ytdl(data.url,{filter:"audioonly"})
+		.pipe(stream);
+	//someone FIX ME- finish emits twice on eevent reply to ipcRenderer
+	stream.on("finish",()=>{
+		e.reply("download-confirmation","finished");
+		stream.destroy();
+	});
 }
 
 function ytValidateURL(url){
-  return  ytdl.validateURL(url);
+	return ytdl.validateURL(url);
 }
 
-async function ytGetInfo(url){
-  
-   let promise =  ytdl.getBasicInfo(url,[]);
-   const data= Promise.resolve(promise).then((info)=>info).catch(err=>err);
-   return data;
+function ytGetInfo(url){
+	let promise = ytdl.getBasicInfo(url,[]);
+	const data= Promise.resolve(promise).then((info)=>info).catch(err=>err);
+	return data;
 }
+
 module.exports={
-    ytDownload:ytDownload,
-    ytGetInfo:ytGetInfo,
-    ytAudioDownload:ytAudioDownload,
-    ytValidateURL:ytValidateURL
+	ytDownload,
+	ytGetInfo,
+	ytAudioDownload,
+	ytValidateURL
 
 }
