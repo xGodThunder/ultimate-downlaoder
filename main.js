@@ -12,12 +12,12 @@ const {ytDownload,ytGetInfo,ytAudioDownload,ytValidateURL} = require("./helper")
 let mainWindow;
 
 //hide default menu bar
-Menu.setApplicationMenu(false);
+//Menu.setApplicationMenu(false);
 
 // Keep a reference for dev mode
 let dev = false;
 // if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
-//   dev = true;
+// 	dev = true;
 // }
 
 

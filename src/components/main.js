@@ -11,6 +11,9 @@ const {remote} = require("electron"),
 	dialog = remote.dialog,
 	WIN = remote.getCurrentWindow();
 
+const current_platform = require("os").platform();
+
+
 let options = {
 
 	title: "Save file from ultimate-downloader",
@@ -27,6 +30,7 @@ export default ()=>{
 
 	function checkUrl(e){
 		e.preventDefault();
+		console.log(current_platform);
 		if(loading){
 			notification({icon:"error",title:"Download is under process",text:"please wait a while before starting another download"});
 			return false;
@@ -52,7 +56,14 @@ export default ()=>{
 				{name: "Movies", extensions: ["mp4","flv"]},
 			];
 		}
-		options.defaultPath=`c:\\${info.title}`;
+		let current_os_path="";
+		//creating default path for different OS
+		if(current_platform==="darwin" || current_platform==="linux"){
+			current_os_path="/";
+		}else{
+			current_os_path="c:\\";
+		}
+		options.defaultPath=`${current_os_path}${info.title}`;
 		let filename = dialog.showSaveDialog(WIN, options);
 		filename.then(data=>{
 			ipcRenderer.sendSync("start-download",{quality:quality,filepath:data.filePath,url:info.video_url});
