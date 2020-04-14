@@ -10,15 +10,15 @@ const {ytDownload,ytGetInfo,ytAudioDownload,ytValidateURL} = require("./helper")
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-console.log(process.argv);
+
 //hide default menu bar
 //Menu.setApplicationMenu(false);
 
 // Keep a reference for dev mode
 let dev = false;
-// if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
-// 	dev = true;
-// }
+if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
+	dev = true;
+}
 
 
 
